@@ -31,3 +31,8 @@ train_tcga4.py
 train_tcga5_attention_map.py
 temp_test/
 temp_train
+simclr/nohup_highmag.out
+simclr/nohup_lowmag.out
+simclr/nohup.out
+simclr/train_simCLR.log
+simclr/all_patches_sorted.csv

@@ -1,0 +1,38 @@
+# batch_size: 4096
+# batch_size: 2048
+# batch_size: 1024
+batch_size: 512
+# batch_size: 256 # try to use at least 512
+epochs: 10000
+eval_every_n_epochs: 1
+
+# this loads a pre-trained model. You can also use it to continue a run from a checkpoint
+fine_tune_from: 'pre-trained' # histology slides by default
+# fine_tune_from: ''
+
+log_every_n_steps: 25
+weight_decay: 10e-6
+# weight_decay: 10e-8
+fp16_precision: False
+# fp16_precision: True
+n_gpu: 2
+gpu_ids: [0, 1]
+
+model:
+  out_dim: 256
+  base_model: "resnet18"
+  # base_model: "resnet50"
+
+dataset:
+  s: 1
+  input_shape: (224,224,3)
+  num_workers: 8
+  valid_size: 0.1
+
+loss:
+  # temperature: 0.5  
+  temperature: 0.1  
+  # temperature: 0.05  
+  # temperature: 0.005
+  # temperature: 0.0005
+  use_cosine_similarity: True
