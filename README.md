@@ -86,7 +86,7 @@ Now use screen and log the file output to train.log
   $ screen -S train
   $ conda activate dsmil
   <!-- $ python train_tcga.py --dataset=KOH_Dataset_train_lambda --num_classes=1 --feats_size=1024 --num_epochs 200 --stop_epochs 25 > train.log -->
-  $ python train_tcga5.py --dataset=KOH_Dataset_train_lambda --num_classes=1 --feats_size=1024 --num_epochs 200 --stop_epochs 25 > train.log
+  $ python train_tcga_v2.py --dataset=KOH_Dataset_train_lambda --num_classes=1 --feats_size=1024 --num_epochs 200 --stop_epochs 25 > train.log
 ```
 
 >You will need to adjust `--num_classes` option if the dataset contains more than 2 positive classes or only 1 positive class and 1 negative class (binary classifier). See the next section for details.  
@@ -107,7 +107,7 @@ Now use screen and log the file output to train.log
 
 In our case, we create train_test.py and train 5 fold CV with a completely separate test set. This notebook includes WSI feature merging if they belong to the same patient (starts with the same name). Customize to your liking.
 ```
-$ python train_tcga5.py --dataset=KOH_Dataset_train_lambda --dataset_test=KOH_Dataset_test_lambda --num_classes=1 --feats_size=1024 --num_epochs 200 --stop_epochs 25
+$ python train_tcga_v2.py --dataset=KOH_Dataset_train_lambda --dataset_test=KOH_Dataset_test_lambda --num_classes=1 --feats_size=1024 --num_epochs 200 --stop_epochs 25
 ```
 ### Understanding different evaluation schemes and metrics
 >Different training and evaluation schemes can be choosen by setting the arugment (--eval_scheme).
@@ -126,6 +126,12 @@ $ python train_tcga5.py --dataset=KOH_Dataset_train_lambda --dataset_test=KOH_Da
 ```
   $ python attention_map.py --bag_path test/patches --map_path test/output --thres 0.73 0.28
 ```
+What we used:
+```
+$ python attention_map.py --bag_path test/test_bags/Fungal_Positive --map_path test/output --thres 0.5693772435188293 --aggregator_weights test/test_lowmag/mil_weights_fold_2.pth --embedder_weights test/test_lowmag/embedder_low.pth
+```
+
+
 Useful arguments:
 ```
 [--num_classes]         # Number of non-negative classes.
@@ -136,6 +142,11 @@ Useful arguments:
 [--bag_path]            # Path to a folder containing folders of patches.
 [--patch_ext]            # File extensino of patches.
 [--map_path]            # Path of output attention maps.
+```
+
+- To obtain useful heatmap overlays, run the script WSI_heatmap.py after generating the heatmaps.  Make sure to edit the directories to reflect your folder structure. This code will loop over WSI images, generate high resolution images, and overlay the heatmaps generated previously on the images.
+```
+  $ python WSI_heatmap.py
 ```
 
 ## Folder structures
@@ -205,17 +216,3 @@ root
 3. Labels.
 > For binary classifier, use `1` for positive bags and `0` for negative bags. Use `--num_classes=1` at training.  
 > For multi-class classifier (`N` positive classes and one optional negative class), use `0~(N-1)` for positive classes. If you have a negative class (not belonging to any one of the positive classes), use `N` for its label. Use `--num_classes=N` (`N` equals the number of **positive classes**) at training.
-
-
-## Citation
-If you use the code or results in your research, please use the following BibTeX entry.  
-```
-@inproceedings{li2021dual,
-  title={Dual-stream multiple instance learning network for whole slide image classification with self-supervised contrastive learning},
-  author={Li, Bin and Li, Yin and Eliceiri, Kevin W},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-  pages={14318--14328},
-  year={2021}
-}
-
-
