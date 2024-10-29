@@ -1,11 +1,8 @@
-# Automated Detection of Filamentous Fungal Keratitis Using Corneal Smears with Dual-stream multiple instance learning DSMIL
-Pytorch implementation for the fungal keratitis multiple instance learning network with self-supervised contrastive learning.
+# Automated Detection of Filamentous Fungal Keratitis Using KOH Smears with Dual-stream multiple instance learning DSMIL
+This is the Pytorch implementation for the fungal keratitis detection algorithm on potassium hydroxide smears using multiple instance learning with self-supervised contrastive learning.
 
 Repository forked and edited from Bin Li et al. DSMIL-WSI [repository](https://github.com/binli123/dsmil-wsi) and paper [Dual-stream Multiple Instance Learning Network for Whole Slide Image Classification with Self-supervised Contrastive Learning](https://arxiv.org/abs/2011.08939).  
-
-
-- To Do: upload models and thresholds on drive.
-
+  
 <!-- <div align="center">
   <img src="thumbnails/overview.png" width="700px" />
 </div>
