@@ -3,6 +3,9 @@ Pytorch implementation for the fungal keratitis multiple instance learning netwo
 
 Repository forked and edited from Bin Li et al. DSMIL-WSI [repository](https://github.com/binli123/dsmil-wsi) and paper [Dual-stream Multiple Instance Learning Network for Whole Slide Image Classification with Self-supervised Contrastive Learning](https://arxiv.org/abs/2011.08939).  
 
+
+- To Do: upload models and thresholds on drive.
+
 <!-- <div align="center">
   <img src="thumbnails/overview.png" width="700px" />
 </div>
@@ -23,6 +26,10 @@ Install [OpenSlide and openslide-python](https://pypi.org/project/openslide-pyth
 [Tutorial 1](https://openslide.org/) and [Tutorial 2 (Windows)](https://www.youtube.com/watch?v=0i75hfLlPsw).  
 
 
+## KOH Smear Models
+- [KOH Smear Models](https://drive.google.com/open?id=1dxcuqHGNSOIvMs0dD2BsuuUhCZjx-sZA&usp=drive_fs)
+- In this link, you will find the models for the KOH Smear dataset. There are 2 embedders (low 10x and high 20x magnification) and 1 aggregator.
+- To follow the architecture of the repository, place the embedder models in the `simclr/runs` folder. The aggregator model should be placed in the working directory.
 
 
 ## Training on your own datasets
@@ -73,8 +80,8 @@ python run.py --dataset=KOH_Dataset_train_lambda --multiscale=1 --level=high
 
 We used:
 ```
-$ python compute_feats.py --dataset=KOH_Dataset_train_lambda --num_classes 1 --magnification tree --weights_low=Apr10_02-11-44_Lambda --weights_high=Apr18_15-57-02_Lambda
-$ python compute_feats.py --dataset=KOH_Dataset_test_lambda --num_classes 1 --magnification tree --weights_low=Apr10_02-11-44_Lambda --weights_high=Apr18_15-57-02_Lambda
+$ python compute_feats.py --dataset=KOH_Dataset_train_lambda --num_classes 1 --magnification tree --weights_low=low_mag_embedder --weights_high=high_mag_embedder
+$ python compute_feats.py --dataset=KOH_Dataset_test_lambda --num_classes 1 --magnification tree --weights_low=low_mag_embedder --weights_high=high_mag_embedder
 ```
 
 5. Training.
@@ -128,7 +135,7 @@ $ python train_tcga_v2.py --dataset=KOH_Dataset_train_lambda --dataset_test=KOH_
 ```
 What we used:
 ```
-$ python attention_map.py --bag_path test/test_bags/Fungal_Positive --map_path test/output --thres 0.5693772435188293 --aggregator_weights test/test_lowmag/mil_weights_fold_2.pth --embedder_weights test/test_lowmag/embedder_low.pth
+$ python attention_map.py --bag_path test/test_bags/Fungal_Positive --map_path test/output --thres 0.5693772435188293 --aggregator_weights aggregator.pth --embedder_weights embedder_low.pth
 ```
 
 
