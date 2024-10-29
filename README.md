@@ -12,20 +12,21 @@ Repository forked and edited from Bin Li et al. DSMIL-WSI [repository](https://g
 </div> -->
 
 ## Installation
-Install [anaconda/miniconda](https://docs.conda.io/en/latest/miniconda.html)  
-Required packages
+1. Install [anaconda/miniconda](https://docs.conda.io/en/latest/miniconda.html)  
+2. Required packages:
 ```
   $ conda env create --name dsmil --file env.yml
   $ conda activate dsmil
 ```
-Install [PyTorch](https://pytorch.org/get-started/locally/)  
-Install [OpenSlide and openslide-python](https://pypi.org/project/openslide-python/).  
+3. Install [PyTorch](https://pytorch.org/get-started/locally/)  
+4. Install [OpenSlide and openslide-python](https://pypi.org/project/openslide-python/).  
 [Tutorial 1](https://openslide.org/) and [Tutorial 2 (Windows)](https://www.youtube.com/watch?v=0i75hfLlPsw).  
 
 
 ## KOH Smear Models
 - [KOH Smear Models](https://drive.google.com/open?id=1dxcuqHGNSOIvMs0dD2BsuuUhCZjx-sZA&usp=drive_fs)
-- In this link, you will find the models for the KOH Smear dataset. There are 2 embedders (low 10x and high 20x magnification) and 1 aggregator.
+- In this link, you will find our KOH smear fungal keratitis detection models, trained on a dataset from Aravind Eye Hospital, Madurai, India. 
+- There are 2 embedders (low 10x and high 20x magnification) and 1 aggregator.
 - To follow the architecture of the repository, place the embedder models in the `simclr/runs` folder. The aggregator model should be placed in the working directory.
 
 
