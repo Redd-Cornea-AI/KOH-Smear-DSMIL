@@ -1,6 +1,7 @@
 # Automated Detection of Filamentous Fungal Keratitis Using KOH Smears with Dual-stream multiple instance learning DSMIL
-This is the Pytorch implementation for the fungal keratitis detection algorithm on potassium hydroxide smears using multiple instance learning with self-supervised contrastive learning.
+This algorithm is designed to detect filamentous fungal keratitis in potassium hydroxide (KOH) smears using multiple instance learning with self-supervised contrastive learning. The algorithm is trained on a dataset from Aravind Eye Hospital, Madurai, India. The dataset consists of 568 patients, with 51% positive for filamentous fungi. The algorithm achieves an AUC of 0.88 and an accuracy of 0.79 on the test set (15%). The algorithm is able to detect filamentous fungal keratitis with high accuracy and may potentially be used for automated interpretation of KOH smears. This algorithm is also able to generate heatmaps to visualize the areas of the slide that are most important for classification.
 
+This is a Pytorch implementation for the fungal keratitis detection algorithm on potassium hydroxide smears using multiple instance learning with self-supervised contrastive learning.
 Repository forked and edited from Bin Li et al. DSMIL-WSI [repository](https://github.com/binli123/dsmil-wsi) and paper [Dual-stream Multiple Instance Learning Network for Whole Slide Image Classification with Self-supervised Contrastive Learning](https://arxiv.org/abs/2011.08939).  
   
 <!-- <div align="center">
@@ -110,7 +111,7 @@ Now use screen and log the file output to train.log
 [--dropout_node]      # Randomly dropout a portion of nodes in the value vector generation network during training [0]
 ```
 
-In our case, we create train_test.py and train 5 fold CV with a completely separate test set. This notebook includes WSI feature merging if they belong to the same patient (starts with the same name). Customize to your liking.
+In our case, we created train_tcga_v2.py and train 5 fold CV with a completely separate test set. This script includes WSI feature merging if they belong to the same patient (starts with the same name). Customize to your liking.
 ```
 $ python train_tcga_v2.py --dataset=KOH_Dataset_train_lambda --dataset_test=KOH_Dataset_test_lambda --num_classes=1 --feats_size=1024 --num_epochs 200 --stop_epochs 25
 ```
@@ -133,7 +134,7 @@ $ python train_tcga_v2.py --dataset=KOH_Dataset_train_lambda --dataset_test=KOH_
 ```
 What we used:
 ```
-$ python attention_map.py --bag_path test/test_bags/Fungal_Positive --map_path test/output --thres 0.5693772435188293 --aggregator_weights aggregator.pth --embedder_weights embedder_low.pth
+$ python attention_map.py --bag_path test_bags/Fungus --map_path test/output --thres 0.5693772435188293 --aggregator_weights aggregator.pth --embedder_weights embedder_low.pth
 ```
 
 
