@@ -22,8 +22,8 @@ This implementation is based on PyTorch and modified from the DSMIL-WSI reposito
 
 *Schematic of the DSMIL Framework for Analyzing Fungal Infections in WSIs. Feature vectors from the 20x and its corresponding 10x patch are fused together and used as inputs in the aggregator.*
 
-### Figure 4: Attention Heatmap of a Consensus Case
-![Figure 4](gr4_lrg.jpg)
+### Figure 3: Attention Heatmap of a Consensus Case
+![Figure 3](gr4_lrg.jpg)
 
 ## Installation
 1. Install [anaconda/miniconda](https://docs.conda.io/en/latest/miniconda.html)  
