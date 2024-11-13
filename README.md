@@ -1,17 +1,29 @@
-# Automated Detection of Filamentous Fungal Keratitis Using KOH Smears with Dual-stream multiple instance learning DSMIL
-This repository contains an algorithm developed to detect filamentous fungal keratitis in potassium hydroxide (KOH) smears using multiple instance learning, enhanced by self-supervised contrastive learning. The model was trained on a dataset from Aravind Eye Hospital in Madurai, India, comprising 568 patients, with 51% testing positive for filamentous fungi.
-On the test set (15% of the data), the algorithm achieves an AUC of 0.88 and an accuracy of 0.79. In addition to its high performance, the algorithm generates heatmaps that highlight the regions of the smear slide most relevant to the classification, supporting interpretability. This tool offers potential for automated, accurate interpretation of KOH smears, facilitating rapid diagnosis and clinical decision-making.
+# Automated Detection of Filamentous Fungal Keratitis Using KOH Smears with Dual-Stream Multiple Instance Learning (DSMIL)
+This repository provides an algorithm developed to detect filamentous fungal keratitis in potassium hydroxide (KOH) smears through multiple instance learning, enhanced by self-supervised contrastive learning. The model was trained on a dataset from Aravind Eye Hospital in Madurai, India, comprising data from 568 patients (51% testing positive for filamentous fungi).
 
-This is a Pytorch implementation for the fungal keratitis detection algorithm on potassium hydroxide smears using multiple instance learning with self-supervised contrastive learning.
-Repository forked and edited from Bin Li et al. DSMIL-WSI [repository](https://github.com/binli123/dsmil-wsi) and paper [Dual-stream Multiple Instance Learning Network for Whole Slide Image Classification with Self-supervised Contrastive Learning](https://arxiv.org/abs/2011.08939).  
-  
-<!-- <div align="center">
-  <img src="thumbnails/overview.png" width="700px" />
-</div>
+In tests (15% of data), the algorithm achieved an AUC of 0.88 and an accuracy of 0.79. It also generates heatmaps that identify regions in the smear slide most relevant to classification, aiding interpretability. This tool has potential for rapid, automated KOH smear interpretation, supporting timely clinical decision-making.
 
-<div align="center">
-  <img src="thumbnails/overview-2.png" width="700px" />
-</div> -->
+> **Related Article:**  
+> Our article on this work has been accepted and is available [here](https://www.ophthalmologyscience.org/article/S2666-9145(24)00189-1/).
+
+This implementation is based on PyTorch and modified from the DSMIL-WSI repository by Bin Li et al. For reference, see the original DSMIL-WSI [repository](https://github.com/binli123/dsmil-wsi) and their paper [here](https://arxiv.org/abs/2011.08939).
+
+- Future updates to this repositories are anticipated to make the code more user friendly and easily reproducible.
+
+### Figure 1: Whole Slide Image of a KOH Smear
+![Figure 1](gr1_lrg.jpg)
+
+*Whole slide image of a KOH smear demonstrating fungal filaments. The WSI file (visualized on the left with low magnification) allows visualization of patches at different magnifications, enabling detailed observation of fungal filaments (see red box).*
+
+### Figure 2: DSMIL Framework for Analyzing Fungal Infections in WSIs
+![Figure 2](gr2_lrg.jpg)
+
+*Schematic of the DSMIL Framework for Analyzing Fungal Infections in WSIs. Feature vectors from the 20x and its corresponding 10x patch are fused together and used as inputs in the aggregator.*
+
+*Schematic of the DSMIL Framework for Analyzing Fungal Infections in WSIs. Feature vectors from the 20x and its corresponding 10x patch are fused together and used as inputs in the aggregator.*
+
+### Figure 4: Attention Heatmap of a Consensus Case
+![Figure 4](gr4_lrg.jpg)
 
 ## Installation
 1. Install [anaconda/miniconda](https://docs.conda.io/en/latest/miniconda.html)  
@@ -26,25 +38,28 @@ Repository forked and edited from Bin Li et al. DSMIL-WSI [repository](https://g
 
 
 ## KOH Smear Models
-- [KOH Smear Models](https://drive.google.com/open?id=1dxcuqHGNSOIvMs0dD2BsuuUhCZjx-sZA&usp=drive_fs)
-- In this link, you will find our KOH smear fungal keratitis detection models, trained on a dataset from Aravind Eye Hospital, Madurai, India. 
-- There are 2 embedders (low 10x and high 20x magnification) and 1 aggregator.
-- To follow the architecture of the repository, place the embedder models in the `simclr/runs` folder. The aggregator model should be placed in the working directory.
+Download the KOH smear fungal keratitis detection models [here](https://drive.google.com/open?id=1dxcuqHGNSOIvMs0dD2BsuuUhCZjx-sZA&usp=drive_fs). The link contains:
+- Two embedders (for 10x and 20x magnifications).
+- One aggregator model.
 
+Place the embedder models in the `simclr/runs` folder and the aggregator model in the working directory.
 
-## Training on your own datasets
+## Training on Your Dataset
 1. Place WSI files as `WSI\[DATASET_NAME]\[CATEGORY_NAME]\[SLIDE_FOLDER_NAME] (optional)\SLIDE_NAME.svs`. 
 > For binary classifier, the negative class should have `[CATEGORY_NAME]` at index `0` when sorted alphabetically. For multi-class classifier, if you have a negative class (not belonging to any of the positive classes), the folder should have `[CATEGORY_NAME]` at **the last index** when sorted alphabetically. The naming of the class folders does not matter if you do not have a negative class.
-2. Crop patches.  
-```
-  $ python deepzoom_tiler.py -m 0 -b 20 -d [DATASET_NAME]
+2. Crop patches using:  
+```bash
+$ python deepzoom_tiler.py -m 0 -b 20 -d [DATASET_NAME]
 ```
 >Set flag `-m [LEVEL 1] [LEVEL 2]` to crop patches from multiple magnifications. 
+   ```bash
+   $ python deepzoom_tiler.py -m 0 1 -b 20 -d [DATASET_NAME]
+   ```
 
 We used:
-```
-  $ python deepzoom_tiler.py --magnifications 0 1  --base_mag 20 --dataset KOH_Dataset_test_lambda --background_t 7 --quality 100
-  $ python deepzoom_tiler.py --magnifications 0 1  --base_mag 20 --dataset KOH_Dataset_train_lambda --background_t 7 --quality 100
+```bash
+$ python deepzoom_tiler.py --magnifications 0 1  --base_mag 20 --dataset KOH_Dataset_test_lambda --background_t 7 --quality 100
+$ python deepzoom_tiler.py --magnifications 0 1  --base_mag 20 --dataset KOH_Dataset_train_lambda --background_t 7 --quality 100
 ```
 with:
 ```
@@ -56,46 +71,46 @@ with:
 
 ```
 
-3. Train an embedder.  
-- Edit /simclr/config.yaml to set the parameters for training the embedder (epochs, batch size, etc).
-```
+3. Train the embedder. Edit `simclr/config.yaml` to set embedder parameters (epochs, batch size, etc) and execute:
+```bash
   $ cd simclr
   $ python run.py --dataset=[DATASET_NAME]
 ```
->Set flag `--multiscale=1` and flag `--level=low` or `--level=high` to train an embedder for each magnification if the patches are cropped from multiple magnifications.   
+>Set flag `--multiscale=1` and flag `--level=low` or `--level=high` to train an embedder for each magnification if the patches are cropped from multiple magnifications:  
+   ```bash
+   $ cd simclr
+   $ python run.py --dataset=[DATASET_NAME] --multiscale=1 --level=low
+   $ python run.py --dataset=[DATASET_NAME] --multiscale=1 --level=high
+   ```
 
 We used:
-```
+```bash
 python run.py --dataset=KOH_Dataset_train_lambda --multiscale=1 --level=low
 python run.py --dataset=KOH_Dataset_train_lambda --multiscale=1 --level=high
 ```
 
 4. Compute features using the embedder.  
-```
-  $ cd ..
-  $ python compute_feats.py --dataset=[DATASET_NAME]
+```bash
+$ cd ..
+$ python compute_feats.py --dataset=[DATASET_NAME]
 ```
 >Set flag `--magnification=tree` to compute the features for multiple magnifications.
->This will use the last trained embedder to compute the features, if you want to use an embedder from a specific run, add the option `--weights=[RUN_NAME]`, where `[RUN_NAME]` is a folder name inside `simclr/runs/`. If you have an embedder you want to use, you can place the weight file as `simclr/runs/[RUN_NAME]/checkpoints/model.pth` and pass the `[RUN_NAME]` to this option. To use a specific embedder for each magnification, set option `--weights_low=[RUN_NAME]` (embedder for low magnification) and `--weights_high=[RUN_NAME]` (embedder for high magnification). The embedder architecture is ResNet18 with **instance normalization**.     
+>This will use the last trained embedder to compute the features, if you want to use an embedder from a specific run, add the option `--weights=[RUN_NAME]`, where `[RUN_NAME]` is a folder name inside `simclr/runs/`. If you have an embedder you want to use, you can place the weight file as `simclr/runs/[RUN_NAME]/checkpoints/model.pth` and pass the `[RUN_NAME]` to this option. To use a specific embedder for each magnification, set option `--weights_low=[RUN_NAME]` (embedder for low magnification) and `--weights_high=[RUN_NAME]` (embedder for high magnification). The embedder architecture is ResNet18 with **instance normalization**.   
+```bash
+$ cd ..
+$ python compute_feats.py --dataset=[DATASET_NAME] --magnification tree --weights_low=low_mag_embedder --weights_high=high_mag_embedder
+```
 
 We used:
-```
+```bash
 $ python compute_feats.py --dataset=KOH_Dataset_train_lambda --num_classes 1 --magnification tree --weights_low=low_mag_embedder --weights_high=high_mag_embedder
 $ python compute_feats.py --dataset=KOH_Dataset_test_lambda --num_classes 1 --magnification tree --weights_low=low_mag_embedder --weights_high=high_mag_embedder
 ```
 
-5. Training.
+5. Training:
+```bash
+$ python train_tcga.py --dataset=[DATASET_NAME]
 ```
-  $ python train_tcga.py --dataset=[DATASET_NAME]
-```
-Now use screen and log the file output to train.log
-```
-  $ screen -S train
-  $ conda activate dsmil
-  <!-- $ python train_tcga.py --dataset=KOH_Dataset_train_lambda --num_classes=1 --feats_size=1024 --num_epochs 200 --stop_epochs 25 > train.log -->
-  $ python train_tcga_v2.py --dataset=KOH_Dataset_train_lambda --num_classes=1 --feats_size=1024 --num_epochs 200 --stop_epochs 25 > train.log
-```
-
 >You will need to adjust `--num_classes` option if the dataset contains more than 2 positive classes or only 1 positive class and 1 negative class (binary classifier). See the next section for details.  
 
 ### Useful arguments:
@@ -112,10 +127,6 @@ Now use screen and log the file output to train.log
 [--dropout_node]      # Randomly dropout a portion of nodes in the value vector generation network during training [0]
 ```
 
-In our case, we created train_tcga_v2.py and train 5 fold CV with a completely separate test set. This script includes WSI feature merging if they belong to the same patient (starts with the same name). Customize to your liking.
-```
-$ python train_tcga_v2.py --dataset=KOH_Dataset_train_lambda --dataset_test=KOH_Dataset_test_lambda --num_classes=1 --feats_size=1024 --num_epochs 200 --stop_epochs 25
-```
 ### Understanding different evaluation schemes and metrics
 >Different training and evaluation schemes can be choosen by setting the arugment (--eval_scheme).
 #### --eval_scheme=5-fold-cv
@@ -127,17 +138,20 @@ $ python train_tcga_v2.py --dataset=KOH_Dataset_train_lambda --dataset_test=KOH_
 >For a binary classification, accuracy and balanced accuracy score are computed. For a multi-label classification, hamming loss (smaller the better) and subset accuracy are computed.  
 
 
+In our case, we created a customized train_tcga_v2.py for 5 fold cross validation training with a completely separate test set. This script also includes WSI feature merging if they belong to the same patient (starts with the same name). Customize to your liking.
+```bash
+$ python train_tcga_v2.py --dataset=KOH_Dataset_train_lambda --dataset_test=KOH_Dataset_test_lambda --num_classes=1 --feats_size=1024 --num_epochs 200 --stop_epochs 25
+```
 
 
 6. Testing.
-```
-  $ python attention_map.py --bag_path test/patches --map_path test/output --thres 0.73 0.28
+```bash
+$ python attention_map.py --bag_path test/patches --map_path test/output --thres 0.73 0.28
 ```
 What we used:
-```
+```bash
 $ python attention_map.py --bag_path test_bags/Fungus --map_path test/output --thres 0.5693772435188293 --aggregator_weights aggregator.pth --embedder_weights embedder_low.pth
 ```
-
 
 Useful arguments:
 ```
@@ -152,8 +166,8 @@ Useful arguments:
 ```
 
 - To obtain useful heatmap overlays, run the script WSI_heatmap.py after generating the heatmaps.  Make sure to edit the directories to reflect your folder structure. This code will loop over WSI images, generate high resolution images, and overlay the heatmaps generated previously on the images.
-```
-  $ python WSI_heatmap.py
+```bash
+$ python WSI_heatmap.py
 ```
 
 ## Folder structures
