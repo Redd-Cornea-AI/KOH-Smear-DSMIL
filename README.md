@@ -28,7 +28,7 @@ This implementation is based on PyTorch and modified from the DSMIL-WSI reposito
 ## Installation
 1. Install [anaconda/miniconda](https://docs.conda.io/en/latest/miniconda.html)  
 2. Required packages:
-```
+```bash
   $ conda env create --name dsmil --file env.yml
   $ conda activate dsmil
 ```
@@ -62,16 +62,15 @@ $ python deepzoom_tiler.py --magnifications 0 1  --base_mag 20 --dataset KOH_Dat
 $ python deepzoom_tiler.py --magnifications 0 1  --base_mag 20 --dataset KOH_Dataset_train_lambda --background_t 7 --quality 100
 ```
 with:
+```text
+--magnifications 0 1  # Crop patches from magnification 0 and 1.
+--base_mag 20         # Base magnification.
+--dataset [DATASET_NAME]  # Dataset folder name.
+--background_t 7       # Threshold for background detection.
+--quality 100          # JPEG quality (compression or not).
 ```
-  --magnifications 0 1  # Crop patches from magnification 0 and 1.
-  --base_mag 20         # Base magnification.
-  --dataset [DATASET_NAME]  # Dataset folder name.
-  --background_t 7       # Threshold for background detection.
-  --quality 100          # JPEG quality (compression or not).
 
-```
-
-3. Train the embedder. Edit `simclr/config.yaml` to set embedder parameters (epochs, batch size, etc) and execute:
+1. Train the embedder. Edit `simclr/config.yaml` to set embedder parameters (epochs, batch size, etc) and execute:
 ```bash
   $ cd simclr
   $ python run.py --dataset=[DATASET_NAME]
@@ -114,7 +113,7 @@ $ python train_tcga.py --dataset=[DATASET_NAME]
 >You will need to adjust `--num_classes` option if the dataset contains more than 2 positive classes or only 1 positive class and 1 negative class (binary classifier). See the next section for details.  
 
 ### Useful arguments:
-```
+```text
 [--num_classes]       # Number of non-negative classes, for a binary classification (postive/negative), this is set to 1
 [--feats_size]        # Size of feature vector (depends on the CNN backbone and whether patch fusion was used)
 [--lr]                # Initial learning rate [0.0001]
@@ -154,7 +153,7 @@ $ python attention_map.py --bag_path test_bags/Fungus --map_path test/output --t
 ```
 
 Useful arguments:
-```
+```text
 [--num_classes]         # Number of non-negative classes.
 [--feats_size]          # Size of feature vector (depends on the CNN backbone).
 [--thres]               # List of thresholds for the classes returned by the training function.
@@ -172,7 +171,7 @@ $ python WSI_heatmap.py
 
 ## Folder structures
 Data is organized in two folders, `WSI` and `datasets`. `WSI` folder contains the images and `datasets` contains the computed features.
-```
+```text
 root
 |-- WSI
 |   |-- DATASET_NAME
@@ -184,7 +183,7 @@ root
 |   |   |   |-- ...
 ```
 Once patch extraction is performed, `sinlge` folder or `pyramid` folder will appear.
-```
+```text
 root
 |-- WSI
 |   |-- DATASET_NAME
@@ -206,7 +205,7 @@ root
 |   |   |   |   |-- ...
 ```
 Once feature computing is performed, `DATASET_NAME` folder will appear inside `datasets` folder.
-```
+```text
 root
 |-- datasets
 |   |-- DATASET_NAME
