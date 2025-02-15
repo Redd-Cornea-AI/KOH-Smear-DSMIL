@@ -639,6 +639,9 @@ def main():
         print("Combined predictions before squeeze:", mode_result.mode[0])
         print("Combined predictions:", combined_predictions)
         
+        # Create test directory if it doesn't exist
+        os.makedirs('test', exist_ok=True)
+        
         fold_predictions_df['Mode'] = combined_predictions
         fold_predictions_df['Labels'] = test_labels
         fold_predictions_df['Files'] = reserved_testing_bags
