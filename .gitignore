@@ -38,3 +38,4 @@ simclr/train_simCLR.log
 simclr/all_patches_sorted.csv
 README_old.md
 simclr1/*
+WSI
