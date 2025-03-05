@@ -1,11 +1,31 @@
-# Automated Detection of Filamentous Fungal Keratitis Using KOH Smears with Dual-Stream Multiple Instance Learning (DSMIL)
+# 🔬 DSMIL-KOH: AI-Powered Fungal Keratitis Detection on Whole Slide Imaging
+
+[![Paper](https://img.shields.io/badge/Paper-Ophthalmology_Science-blue)](https://www.ophthalmologyscience.org/article/S2666-9145(24)00189-1/)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/release/python-380/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-1.7+-ee4c2c.svg)](https://pytorch.org/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
+> 🎯 **Automated Detection of Filamentous Fungal Keratitis Using KOH Smears Whole Slide Imaging with Dual-Stream Multiple Instance Learning (DSMIL)**
+
+## 📋 Overview
 
 This repository provides an algorithm developed to detect filamentous fungal keratitis in potassium hydroxide (KOH) smears through multiple instance learning, enhanced by self-supervised contrastive learning. The model was trained on a dataset from Aravind Eye Hospital in Madurai, India, comprising data from 568 patients (51% testing positive for filamentous fungi).
 
 In tests (15% of data), the algorithm achieved an AUC of 0.88 and an accuracy of 0.79. It also generates heatmaps that identify regions in the smear slide most relevant to classification, aiding interpretability. This tool has potential for rapid, automated KOH smear interpretation, supporting timely clinical decision-making.
 
-> **Related Article:**  
-> Our article on this work has been accepted and is available [here](https://www.ophthalmologyscience.org/article/S2666-9145(24)00189-1/).
+### 📚 Publication
+
+Our work has been published in **Ophthalmology Science**. Read the full paper [here](https://www.ophthalmologyscience.org/article/S2666-9145(24)00189-1/).
+
+> **Citation**
+> ```bibtex
+> @article{DSMIL-KOH2024,
+>   title={Automated Detection of Filamentous Fungal Keratitis Using KOH Smears with Dual-Stream Multiple Instance Learning},
+>   journal={Ophthalmology Science},
+>   year={2024},
+>   doi={...}
+> }
+> ```
 
 This implementation is based on PyTorch and modified from the DSMIL-WSI repository by Bin Li et al. For reference, see the original DSMIL-WSI [repository](https://github.com/binli123/dsmil-wsi) and their paper [here](https://arxiv.org/abs/2011.08939).
 
