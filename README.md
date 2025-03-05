@@ -15,17 +15,40 @@ In tests (15% of data), the algorithm achieved an AUC of 0.88 and an accuracy of
 
 ### 📚 Publication
 
-Our work has been published in **Ophthalmology Science**. Read the full paper [here](https://www.ophthalmologyscience.org/article/S2666-9145(24)00189-1/).
+Our work has been published in **Ophthalmology Science**. Read the full paper [here](https://www.ophthalmologyscience.org/article/S2666-9145(24)00189-1/fulltext).
 
-> **Citation**
-> ```bibtex
-> @article{DSMIL-KOH2024,
->   title={Automated Detection of Filamentous Fungal Keratitis Using KOH Smears with Dual-Stream Multiple Instance Learning},
->   journal={Ophthalmology Science},
->   year={2024},
->   doi={...}
-> }
-> ```
+#### 📄 Paper Citation
+
+```bibtex
+@article{assaf2024automated,
+  title={Automated Detection of Filamentous Fungal Keratitis Using KOH Smears with Dual-Stream Multiple Instance Learning},
+  author={Assaf, Jad Farid and Srinivasan, Muthiah and Lalitha, Prajna and Rajaraman, Revathi and Mascarenhas, Jeena and Kaliamurthy, Jayaraman and Bharathi, M Jayahar and Prajna, Lalitha and Prajna, N Venkatesh and Ting, Daniel Shu Wei},
+  journal={Ophthalmology Science},
+  volume={4},
+  number={3},
+  pages={100350},
+  year={2024},
+  publisher={Elsevier},
+  doi={10.1016/j.xops.2024.100350},
+  issn={2666-9145},
+  url={https://www.ophthalmologyscience.org/article/S2666-9145(24)00189-1/fulltext}
+}
+```
+
+**APA Format**  
+Assaf, J. F., Srinivasan, M., Lalitha, P., Rajaraman, R., Mascarenhas, J., Kaliamurthy, J., Bharathi, M. J., Prajna, L., Prajna, N. V., & Ting, D. S. W. (2024). Automated Detection of Filamentous Fungal Keratitis Using KOH Smears with Dual-Stream Multiple Instance Learning. *Ophthalmology Science*, *4*(3), 100350.
+
+#### 💻 Repository Citation
+
+```bibtex
+@software{KOH-Smear-DSMIL,
+  author = {Assaf, Jad F.},
+  title = {DSMIL-KOH: AI-Powered Fungal Keratitis Detection on Whole Slide Imaging},
+  year = {2024},
+  publisher = {GitHub},
+  url = {https://github.com/Redd-Cornea-AI/KOH-Smear-DSMIL}
+}
+```
 
 This implementation is based on PyTorch and modified from the DSMIL-WSI repository by Bin Li et al. For reference, see the original DSMIL-WSI [repository](https://github.com/binli123/dsmil-wsi) and their paper [here](https://arxiv.org/abs/2011.08939).
 
