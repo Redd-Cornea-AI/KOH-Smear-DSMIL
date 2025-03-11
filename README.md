@@ -33,7 +33,7 @@ Our work has been published in **Ophthalmology Science**. Read the full paper [h
 
 ![Figure 3](thumbnails/gr4_lrg.jpg)
 
-*Attention heatmap of a consensus case that the model correctly predicted to contain fungus. Heatmap overlay on the WSI, with the critical instances highlighted. The normalized attention scores visually demonstrate the model’s focus on relevant areas. The critical instance, indicated by the highest attention score, aligns well with the region containing fungal elements.*
+*Attention heatmap of a consensus case that the model correctly predicted to contain fungus. Heatmap overlay on the WSI, with the critical instances highlighted. The normalized attention scores visually demonstrate the model's focus on relevant areas. The critical instance, indicated by the highest attention score, aligns well with the region containing fungal elements.*
 
 ## Installation
 
@@ -106,47 +106,59 @@ The script will output:
 
 ## Training on Your Dataset
 
-1. Place WSI files as `WSI\[DATASET_NAME]\[CATEGORY_NAME]\[SLIDE_FOLDER_NAME] (optional)\SLIDE_NAME.svs`. 
+### 1. Data Organization
 
-> For binary classifier, the negative class should have `[CATEGORY_NAME]` at index `0` when sorted alphabetically. For multi-class classifier, if you have a negative class (not belonging to any of the positive classes), the folder should have `[CATEGORY_NAME]` at **the last index** when sorted alphabetically. The naming of the class folders does not matter if you do not have a negative class.
+1. Place WSI files in the following structure:
 
-2. Crop patches using:  
+   ```
+   WSI\[DATASET_NAME]\[CATEGORY_NAME]\[SLIDE_FOLDER_NAME] (optional)\SLIDE_NAME.svs
+   ```
 
-```bash
-python deepzoom_tiler.py -m 0 -b 20 -d [DATASET_NAME]
-```
+   > **Important Note**: For binary classifiers, the negative class should have `[CATEGORY_NAME]` at index `0` when sorted alphabetically. For multi-class classifiers with a negative class, the folder should have `[CATEGORY_NAME]` at **the last index** when sorted alphabetically. The naming of class folders is flexible if you don't have a negative class.
 
->Set flag `-m [LEVEL 1] [LEVEL 2]` to crop patches from multiple magnifications. 
+### 2. Patch Extraction
+
+1. Basic patch extraction command:
+
+   ```bash
+   python deepzoom_tiler.py -m 0 -b 20 -d [DATASET_NAME]
+   ```
+
+2. For multiple magnifications:
 
    ```bash
    python deepzoom_tiler.py -m 0 1 -b 20 -d [DATASET_NAME]
    ```
 
-We used:
+   Example from our study:
 
-```bash
-python deepzoom_tiler.py --magnifications 0 1  --base_mag 20 --dataset KOH_Dataset_test_lambda --background_t 7 --quality 100
-python deepzoom_tiler.py --magnifications 0 1  --base_mag 20 --dataset KOH_Dataset_train_lambda --background_t 7 --quality 100
-```
+   ```bash
+   python deepzoom_tiler.py --magnifications 0 1  --base_mag 20 --dataset KOH_Dataset_test_lambda --background_t 7 --quality 100
+   python deepzoom_tiler.py --magnifications 0 1  --base_mag 20 --dataset KOH_Dataset_train_lambda --background_t 7 --quality 100
+   ```
 
-with:
+   **Key Parameters:**
 
-```text
---magnifications 0 1  # Crop patches from magnification 0 and 1.
---base_mag 20         # Base magnification.
---dataset [DATASET_NAME]  # Dataset folder name.
---background_t 7       # Threshold for background detection.
---quality 100          # JPEG quality (compression or not).
-```
+   ```text
+   --magnifications 0 1  # Crop patches from magnification 0 and 1
+   --base_mag 20        # Base magnification
+   --dataset           # Dataset folder name
+   --background_t 7    # Threshold for background detection
+   --quality 100       # JPEG quality (compression or not)
+   ```
 
-3. Train the embedder. Edit `simclr/config.yaml` to set embedder parameters (epochs, batch size, etc) and execute:
+### 3. Embedder Training
 
-```bash
-  cd simclr
-  python run.py --dataset=[DATASET_NAME]
-```
+1. Configure embedder parameters in `simclr/config.yaml`
 
->Set flag `--multiscale=1` and flag `--level=low` or `--level=high` to train an embedder for each magnification if the patches are cropped from multiple magnifications:  
+2. Basic training command:
+
+   ```bash
+   cd simclr
+   python run.py --dataset=[DATASET_NAME]
+   ```
+
+3. For multiple magnifications:
 
    ```bash
    cd simclr
@@ -154,86 +166,95 @@ with:
    python run.py --dataset=[DATASET_NAME] --multiscale=1 --level=high
    ```
 
-We used:
+>Set flag `--multiscale=1` and flag `--level=low` or `--level=high` to train an embedder for each magnification if the 
+patches are cropped from multiple magnifications:  
 
-```bash
-python run.py --dataset=KOH_Dataset_train_lambda --multiscale=1 --level=low
-python run.py --dataset=KOH_Dataset_train_lambda --multiscale=1 --level=high
-```
+   Example from our study:
 
-4. Feature extraction using the embedder.  
+   ```bash
+   python run.py --dataset=KOH_Dataset_train_lambda --multiscale=1 --level=low
+   python run.py --dataset=KOH_Dataset_train_lambda --multiscale=1 --level=high
+   ```
 
-```bash
-cd ..
-python compute_feats.py --dataset=[DATASET_NAME]
-```
+### 4. Feature Extraction
+
+1. Basic feature extraction:
+
+   ```bash
+   cd ..
+   python compute_feats.py --dataset=[DATASET_NAME]
+   ```
 
 >Set flag `--magnification=tree` to compute the features for multiple magnifications.
 >This will use the last trained embedder to compute the features, if you want to use an embedder from a specific run, add the option `--weights=[RUN_NAME]`, where `[RUN_NAME]` is a folder name inside `simclr/runs/`. If you have an embedder you want to use, you can place the weight file as `simclr/runs/[RUN_NAME]/checkpoints/model.pth` and pass the `[RUN_NAME]` to this option. To use a specific embedder for each magnification, set option `--weights_low=[RUN_NAME]` (embedder for low magnification) and `--weights_high=[RUN_NAME]` (embedder for high magnification). The embedder architecture is ResNet18 with **instance normalization**.
 
 > For feature extraction using our embedders on your datasets, download the [embedder files](https://drive.google.com/open?id=1dxcuqHGNSOIvMs0dD2BsuuUhCZjx-sZA&usp=drive_fs) and place them in the `simclr/runs` directory.
 
-```bash
-cd ..
-python compute_feats.py --dataset=[DATASET_NAME] --magnification tree --weights_low=low_mag_embedder --weights_high=high_mag_embedder
-```
+2. For multiple magnifications using our pre-trained embedders:
 
-We used:
+   ```bash
+   python compute_feats.py --dataset=[DATASET_NAME] --magnification tree --weights_low=low_mag_embedder --weights_high=high_mag_embedder
+   ```
 
-```bash
-python compute_feats.py --dataset=KOH_Dataset_train_lambda --num_classes 1 --magnification tree --weights_low=low_mag_embedder --weights_high=high_mag_embedder
-python compute_feats.py --dataset=KOH_Dataset_test_lambda --num_classes 1 --magnification tree --weights_low=low_mag_embedder --weights_high=high_mag_embedder
-```
+   Example from our study:
 
-> For binary classifier, use `1` for positive bags and `0` for negative bags. Use `--num_classes=1` at training.  
-> For multi-class classifier (`N` positive classes and one optional negative class), use `0~(N-1)` for positive classes. If you have a negative class (not belonging to any one of the positive classes), use `N` for its label. Use `--num_classes=N` (`N` equals the number of **positive classes**) at training.
+   ```bash
+   python compute_feats.py --dataset=KOH_Dataset_train_lambda --num_classes 1 --magnification tree --weights_low=low_mag_embedder --weights_high=high_mag_embedder
+   python compute_feats.py --dataset=KOH_Dataset_test_lambda --num_classes 1 --magnification tree --weights_low=low_mag_embedder --weights_high=high_mag_embedder
+   ```
 
-5. Train the aggregator:
+   > **Note**: For binary classifiers, use `1` for positive bags and `0` for negative bags with `--num_classes=1`. For multi-class classifiers (`N` positive classes and one optional negative class), use `0~(N-1)` for positive classes and `N` for negative class. Use `--num_classes=N` (where `N` equals the number of **positive classes**).
 
-```bash
-python train_tcga.py --dataset=[DATASET_NAME]
-```
+### 5. Aggregator Training
+
+1. Basic training command:
+
+   ```bash
+   python train_tcga.py --dataset=[DATASET_NAME]
+   ```
 
 >You will need to adjust `--num_classes` option if the dataset contains more than 2 positive classes or only 1 positive class and 1 negative class (binary classifier). See the previous section for details.  
 
-### Useful arguments:
+   Example from our study:
 
-```text
-[--num_classes]       # Number of non-negative classes, for a binary classification (postive/negative), this is set to 1
-[--feats_size]        # Size of feature vector (depends on the CNN backbone and whether patch fusion was used)
-[--lr]                # Initial learning rate [0.0001]
-[--num_epochs]        # Number of training epochs [50]
-[--stop_epochs]       # Skip remaining epochs if training has not improved after N epochs [10]
-[--weight_decay]      # Weight decay [1e-3]
-[--dataset]           # Dataset folder name
-[--split]             # Training/validation split [0.2]
-[--dropout_patch]     # Randomly dropout a portion of patches and replace with duplicates during training [0]
-[--dropout_node]      # Randomly dropout a portion of nodes in the value vector generation network during training [0]
-```
+   ```bash
+   python train_tcga_v2.py --dataset=KOH_Dataset_train_lambda --dataset_test=KOH_Dataset_test_lambda --num_classes=1 --feats_size=1024 --num_epochs 200 --stop_epochs 25
+   ```
 
-### Understanding different evaluation schemes and metrics
+   **Key Parameters:**
 
->Different training and evaluation schemes can be choosen by setting the arugment (--eval_scheme).
+   ```text
+   --num_classes        # Number of non-negative classes (1 for binary classification)
+   --feats_size        # Feature vector size (depends on CNN backbone and patch fusion)
+   --lr                # Initial learning rate [0.0001]
+   --num_epochs        # Number of training epochs [50]
+   --stop_epochs       # Skip remaining epochs if no improvement after N epochs [10]
+   --weight_decay      # Weight decay [1e-3]
+   --dataset           # Dataset folder name
+   --split             # Training/validation split [0.2]
+   --dropout_patch     # Random patch dropout rate during training [0]
+   --dropout_node      # Random node dropout rate in value vector generation [0]
+   ```
 
-#### --eval_scheme=5-fold-cv
+#### Evaluation Schemes
 
->A 5-fold cross-validation. For each fold, AUC and accuracy score will be computed on the validation set. Averaged values across the 5 folds will be computed after all folds complete.
+1. **5-fold Cross-Validation** (`--eval_scheme=5-fold-cv`):
+   - Performs 5-fold cross-validation
+   - Computes AUC and accuracy for each fold
+   - Reports averaged metrics across all folds
 
-#### --eval_scheme=5-fold-cv-standalone-test
+2. **5-fold CV with Standalone Test** (`--eval_scheme=5-fold-cv-standalone-test`):
+   - Reserves 20% as standalone test set
+   - Performs 5-fold CV on remaining 80%
+   - Saves best model and threshold for each fold
+   - Uses majority voting of 5 models for final test set predictions
+   - Reports appropriate metrics based on classification type:
+     - Binary: accuracy and balanced accuracy
+     - Multi-label: hamming loss and subset accuracy
 
->A standalone test set consisting of 20% samples is reserved, remaining 80% samples are used to construct a 5-fold cross-validation.  
->For each fold, the best model and corresponding threshold are saved.
->After the 5-fold cross-validation, 5 best models along with the corresponding optimal thresholds are obtained which are used to perform inference on the reserved test set. A final prediction for a test sample is the majority vote of the 5 models.  
->For a binary classification, accuracy and balanced accuracy score are computed. For a multi-label classification, hamming loss (smaller the better) and subset accuracy are computed.  
+### 6. Testing and Heatmap Visualization
 
-In our case, we created a customized train_tcga_v2.py for 5 fold cross validation training with a completely separate test set. This script also includes WSI feature merging if they belong to the same patient (starts with the same name). Customize to your liking.
-
-```bash
-python train_tcga_v2.py --dataset=KOH_Dataset_train_lambda --dataset_test=KOH_Dataset_test_lambda --num_classes=1 --feats_size=1024 --num_epochs 200 --stop_epochs 25
-```
-
-6. Testing and attention map generation.
-
+Run inference on new WSIs:
 ```bash
 python inference.py \
     --slide_path path/to/wsi.svs \
@@ -244,32 +265,30 @@ python inference.py \
     --detection_threshold 0.5
 ```
 
-Useful arguments:
-
+**Key Parameters:**
 ```text
---slide_path            # Path to input WSI file (.svs format)
---embedder_low          # Path to low magnification embedder weights
---embedder_high         # Path to high magnification embedder weights
---aggregator            # Path to aggregator model weights
---output_dir            # Directory to save attention heatmap (optional)
---tile_size             # Size of patches to extract (default: 224)
---background_threshold  # Threshold for background filtering (default: 7)
---base_mag              # Base magnification of WSI (default: 20)
---magnifications        # Magnification levels to use (default: [0, 1])
---device                # Device to use (cpu or cuda, default: auto-detect)
---detection_threshold   # Threshold for positive detection (default: 0.5)
---average               # Average bag and instance predictions (if used during training)
---debug                 # Print debug information
---debug_model           # Print detailed model debugging information
+--slide_path            # Input WSI file path (.svs format)
+--embedder_low          # Low magnification embedder weights path
+--embedder_high         # High magnification embedder weights path
+--aggregator            # Aggregator model weights path
+--output_dir            # Attention heatmap save directory (optional)
+--tile_size             # Patch size to extract [224]
+--background_threshold  # Background filtering threshold [7]
+--base_mag             # Base magnification [20]
+--magnifications       # Magnification levels [0, 1]
+--device               # Computing device (cpu/cuda)
+--detection_threshold  # Positive detection threshold [0.5]
+--average              # Average bag and instance predictions
+--debug                # Enable debug information
+--debug_model          # Enable detailed model debugging
 ```
 
-The script will output:
-
+**Outputs:**
 - Binary prediction (Positive/Negative)
 - Prediction probability
-- Attention heatmap (if output_dir is specified)
+- Attention heatmap (if output_dir specified)
 
-> The detection threshold for our aggregator is chosen during training with `train_tcga.py` and is saved with the model in a json file.
+> **Note**: The detection threshold for the aggregator is determined during training with `train_tcga.py` and saved with the model in a JSON file.
 
 ## Folder structure
 
