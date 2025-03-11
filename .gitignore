@@ -39,3 +39,4 @@ simclr/all_patches_sorted.csv
 README_old.md
 simclr1/*
 WSI
+inference_test/*

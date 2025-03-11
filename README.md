@@ -56,7 +56,56 @@ Download the KOH smear fungal keratitis detection models [here](https://drive.go
 - Two embedders (for 10x and 20x magnifications).
 - One aggregator model.
 
-Place the embedder models in the `simclr/runs` folder and the aggregator model in the working directory.
+To test this model on your own whole slide images (WSIs), place the three `.pth` files in the `/models` directory and execute the `inference.py` script.  
+
+> For feature extraction using our embedders on your datasets, ensure that the two embedder model folders are located in the `simclr/runs` directory.
+> Make sure to follow the directory structure to avoid any issues during execution.
+
+### Testing on your own KOH Smear WSIs (Inference)
+
+For single slide inference, use the `inference.py` script. This script processes individual WSI files and provides predictions along with attention heatmaps.
+
+```bash
+python inference.py \
+    --slide_path path/to/wsi.svs \
+    --embedder_low models/low_mag_embedder.pth \
+    --embedder_high models/high_mag_embedder.pth \
+    --aggregator models/aggregator.pth \
+    --output_dir inference_test \
+    --tile_size 224 \
+    --background_threshold 7 \
+    --base_mag 20 \
+    --magnifications 0 1 \
+    --device cpu \
+    --detection_threshold 0.4597581923007965
+```
+
+Useful arguments:
+
+```text
+--slide_path            # Path to input WSI file (.svs format)
+--embedder_low          # Path to low magnification embedder weights
+--embedder_high         # Path to high magnification embedder weights
+--aggregator            # Path to aggregator model weights
+--output_dir            # Directory to save attention heatmap (optional)
+--tile_size             # Size of patches to extract (default: 224)
+--background_threshold  # Threshold for background filtering (default: 7)
+--base_mag              # Base magnification of WSI (default: 20)
+--magnifications        # Magnification levels to use (default: [0, 1])
+--device                # Device to use (cpu or cuda, default: auto-detect)
+--detection_threshold   # Threshold for positive detection (default: 0.5)
+--average               # Average bag and instance predictions (if used during training)
+--debug                 # Print debug information
+--debug_model           # Print detailed model debugging information
+```
+
+The script will output:
+
+- Binary prediction (Positive/Negative)
+- Prediction probability
+- Attention heatmap (if output_dir is specified)
+
+> The detection threshold for our aggregator was chosen at `0.5710366368293762`. Our algorithm was trained with a base magnification of 20x, a tile size of 224px, with a minimum background entropy threshold (patch filtering) of 7. When using our models, use similar parameters for best results.
 
 ## Training on Your Dataset
 
@@ -115,7 +164,7 @@ python run.py --dataset=KOH_Dataset_train_lambda --multiscale=1 --level=low
 python run.py --dataset=KOH_Dataset_train_lambda --multiscale=1 --level=high
 ```
 
-4. Compute features using the embedder.  
+4. Feature extraction using the embedder.  
 
 ```bash
 cd ..
@@ -137,7 +186,7 @@ python compute_feats.py --dataset=KOH_Dataset_train_lambda --num_classes 1 --mag
 python compute_feats.py --dataset=KOH_Dataset_test_lambda --num_classes 1 --magnification tree --weights_low=low_mag_embedder --weights_high=high_mag_embedder
 ```
 
-5. Training:
+5. Train the aggregator:
 
 ```bash
 python train_tcga.py --dataset=[DATASET_NAME]
@@ -171,7 +220,7 @@ python train_tcga.py --dataset=[DATASET_NAME]
 #### --eval_scheme=5-fold-cv-standalone-test
 
 >A standalone test set consisting of 20% samples is reserved, remaining 80% samples are used to construct a 5-fold cross-validation.  
->For each fold, the best model and corresponding threshold are saved.    
+>For each fold, the best model and corresponding threshold are saved.
 >After the 5-fold cross-validation, 5 best models along with the corresponding optimal thresholds are obtained which are used to perform inference on the reserved test set. A final prediction for a test sample is the majority vote of the 5 models.  
 >For a binary classification, accuracy and balanced accuracy score are computed. For a multi-label classification, hamming loss (smaller the better) and subset accuracy are computed.  
 
@@ -185,12 +234,6 @@ python train_tcga_v2.py --dataset=KOH_Dataset_train_lambda --dataset_test=KOH_Da
 
 ```bash
 python attention_map.py --bag_path test/patches --map_path test/output --thres 0.73 0.28
-```
-
-What we used:
-
-```bash
-$ python attention_map.py --bag_path test_bags/Fungus --map_path test/output --thres 0.5693772435188293 --aggregator_weights aggregator.pth --embedder_weights embedder_low.pth
 ```
 
 Useful arguments:
