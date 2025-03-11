@@ -5,54 +5,17 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-1.7+-ee4c2c.svg)](https://pytorch.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-> 🎯 **Automated Detection of Filamentous Fungal Keratitis Using KOH Smears Whole Slide Imaging with Dual-Stream Multiple Instance Learning (DSMIL)**
+> 🎯 **Automated Detection of Filamentous Fungal Keratitis on Whole Slide Images of Potassium Hydroxide Smears with Multiple Instance Learning**
 
 ## 📋 Overview
 
 This repository provides an algorithm developed to detect filamentous fungal keratitis in potassium hydroxide (KOH) smears through multiple instance learning, enhanced by self-supervised contrastive learning. The model was trained on a dataset from Aravind Eye Hospital in Madurai, India, comprising data from 568 patients (51% testing positive for filamentous fungi).
 
-In tests (15% of data), the algorithm achieved an AUC of 0.88 and an accuracy of 0.79. It also generates heatmaps that identify regions in the smear slide most relevant to classification, aiding interpretability. This tool has potential for rapid, automated KOH smear interpretation, supporting timely clinical decision-making.
+In tests (15% of data), the algorithm achieved an **AUC of 0.88** and an **accuracy of 0.79**. It also generates heatmaps that identify regions in the smear slide most relevant to classification, aiding interpretability. This tool has potential for rapid, automated KOH smear interpretation, supporting timely clinical decision-making.
 
 ### 📚 Publication
 
 Our work has been published in **Ophthalmology Science**. Read the full paper [here](https://www.ophthalmologyscience.org/article/S2666-9145(24)00189-1/fulltext).
-
-#### 📄 Paper Citation
-
-```bibtex
-@article{assaf2024automated,
-  title={Automated Detection of Filamentous Fungal Keratitis Using KOH Smears with Dual-Stream Multiple Instance Learning},
-  author={Assaf, Jad Farid and Srinivasan, Muthiah and Lalitha, Prajna and Rajaraman, Revathi and Mascarenhas, Jeena and Kaliamurthy, Jayaraman and Bharathi, M Jayahar and Prajna, Lalitha and Prajna, N Venkatesh and Ting, Daniel Shu Wei},
-  journal={Ophthalmology Science},
-  volume={4},
-  number={3},
-  pages={100350},
-  year={2024},
-  publisher={Elsevier},
-  doi={10.1016/j.xops.2024.100350},
-  issn={2666-9145},
-  url={https://www.ophthalmologyscience.org/article/S2666-9145(24)00189-1/fulltext}
-}
-```
-
-**APA Format**  
-Assaf, J. F., Srinivasan, M., Lalitha, P., Rajaraman, R., Mascarenhas, J., Kaliamurthy, J., Bharathi, M. J., Prajna, L., Prajna, N. V., & Ting, D. S. W. (2024). Automated Detection of Filamentous Fungal Keratitis Using KOH Smears with Dual-Stream Multiple Instance Learning. *Ophthalmology Science*, *4*(3), 100350.
-
-#### 💻 Repository Citation
-
-```bibtex
-@software{KOH-Smear-DSMIL,
-  author = {Assaf, Jad F.},
-  title = {DSMIL-KOH: AI-Powered Fungal Keratitis Detection on Whole Slide Imaging},
-  year = {2024},
-  publisher = {GitHub},
-  url = {https://github.com/Redd-Cornea-AI/KOH-Smear-DSMIL}
-}
-```
-
-This implementation is based on PyTorch and modified from the DSMIL-WSI repository by Bin Li et al. For reference, see the original DSMIL-WSI [repository](https://github.com/binli123/dsmil-wsi) and their paper [here](https://arxiv.org/abs/2011.08939).
-
-- Future updates to this repositories are anticipated to make the code more user friendly and easily reproducible.
 
 ## Figure 1: Whole Slide Image of a KOH Smear
 
@@ -66,11 +29,11 @@ This implementation is based on PyTorch and modified from the DSMIL-WSI reposito
 
 *Schematic of the DSMIL Framework for Analyzing Fungal Infections in WSIs. Feature vectors from the 20x and its corresponding 10x patch are fused together and used as inputs in the aggregator.*
 
-*Schematic of the DSMIL Framework for Analyzing Fungal Infections in WSIs. Feature vectors from the 20x and its corresponding 10x patch are fused together and used as inputs in the aggregator.*
-
 ## Figure 3: Attention Heatmap of a Consensus Case
 
 ![Figure 3](thumbnails/gr4_lrg.jpg)
+
+*Attention heatmap of a consensus case that the model correctly predicted to contain fungus. Heatmap overlay on the WSI, with the critical instances highlighted. The normalized attention scores visually demonstrate the model’s focus on relevant areas. The critical instance, indicated by the highest attention score, aligns well with the region containing fungal elements.*
 
 ## Installation
 
@@ -82,8 +45,8 @@ This implementation is based on PyTorch and modified from the DSMIL-WSI reposito
   conda activate dsmil
 ```
 
-1. Install [PyTorch](https://pytorch.org/get-started/locally/)  
-2. Install [OpenSlide and openslide-python](https://pypi.org/project/openslide-python/).  
+3. Install [PyTorch](https://pytorch.org/get-started/locally/)  
+4. Install [OpenSlide and openslide-python](https://pypi.org/project/openslide-python/).  
 [Tutorial 1](https://openslide.org/) and [Tutorial 2 (Windows)](https://www.youtube.com/watch?v=0i75hfLlPsw).  
 
 ## KOH Smear Models
@@ -324,3 +287,39 @@ root
 
 > For binary classifier, use `1` for positive bags and `0` for negative bags. Use `--num_classes=1` at training.  
 > For multi-class classifier (`N` positive classes and one optional negative class), use `0~(N-1)` for positive classes. If you have a negative class (not belonging to any one of the positive classes), use `N` for its label. Use `--num_classes=N` (`N` equals the number of **positive classes**) at training.
+
+## 📄 Paper Citation
+
+```bibtex
+@article{assaf2024automated,
+  title={Automated Detection of Filamentous Fungal Keratitis on Whole Slide Images of Potassium Hydroxide Smears with Multiple Instance Learning},
+  author={Assaf, Jad F and Yazbeck, Hady and Venkatesh, Prajna N and Prajna, Lalitha and Gunasekaran, Rameshkumar and Rajarathinam, Karpagam and Lietman, Thomas M and Keenan, Jeremy D and Campbell, J Peter and Song, Xubo and Redd, Travis K},
+  journal={Ophthalmology Science},
+  volume={5},
+  number={2},
+  pages={100653},
+  year={2024},
+  publisher={Elsevier},
+  doi={10.1016/j.xops.2024.100653},
+  url={https://www.ophthalmologyscience.org/article/S2666-9145(24)00189-1/fulltext}
+}
+```
+
+**APA Format**  
+Assaf, J. F., Yazbeck, H., Venkatesh, P. N., Prajna, L., Gunasekaran, R., Rajarathinam, K., Lietman, T. M., Keenan, J. D., Campbell, J. P., Song, X., & Redd, T. K. (2024). Automated Detection of Filamentous Fungal Keratitis on Whole Slide Images of Potassium Hydroxide Smears with Multiple Instance Learning. *Ophthalmology Science*, *5*(2), 100653.
+
+### 💻 Repository Citation
+
+```bibtex
+@software{KOH-Smear-DSMIL,
+  author = {Assaf, Jad F.},
+  title = {DSMIL-KOH: AI-Powered Fungal Keratitis Detection on Whole Slide Imaging},
+  year = {2024},
+  publisher = {GitHub},
+  url = {https://github.com/Redd-Cornea-AI/KOH-Smear-DSMIL}
+}
+```
+
+This implementation is based on PyTorch and modified from the DSMIL-WSI repository by Bin Li et al. For reference, see the original DSMIL-WSI [repository](https://github.com/binli123/dsmil-wsi) and their paper [here](https://arxiv.org/abs/2011.08939).
+
+- Future updates to this repositories are anticipated to make the code more user friendly and easily reproducible.
