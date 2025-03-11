@@ -75,11 +75,6 @@ python inference.py \
     --magnifications 0 1 \
     --device cpu \
     --detection_threshold 0.4597581923007965 \
-    --average \
-    --debug \
-    --debug_model \
-    --nonlinear 1 \
-    --feature_size 1024
 ```
 
 Useful arguments:
