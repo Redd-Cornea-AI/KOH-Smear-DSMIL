@@ -42,3 +42,4 @@ WSI
 inference_test/*
 models/high_mag_embedder.pth
 models/low_mag_embedder.pth
+README OURS.md

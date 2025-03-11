@@ -229,30 +229,44 @@ In our case, we created a customized train_tcga_v2.py for 5 fold cross validatio
 python train_tcga_v2.py --dataset=KOH_Dataset_train_lambda --dataset_test=KOH_Dataset_test_lambda --num_classes=1 --feats_size=1024 --num_epochs 200 --stop_epochs 25
 ```
 
-6. Testing.
+6. Testing and attention map generation.
 
 ```bash
-python attention_map.py --bag_path test/patches --map_path test/output --thres 0.73 0.28
+python inference.py \
+    --slide_path path/to/wsi.svs \
+    --embedder_low path/to/low_mag_embedder.pth \
+    --embedder_high path/to/high_mag_embedder.pth \
+    --aggregator path/to/aggregator.pth \
+    --output_dir path/to/output_dir \
+    --detection_threshold 0.5
 ```
 
 Useful arguments:
 
 ```text
-[--num_classes]         # Number of non-negative classes.
-[--feats_size]          # Size of feature vector (depends on the CNN backbone).
-[--thres]               # List of thresholds for the classes returned by the training function.
-[--embedder_weights]    # Path to the embedder weights file (saved by SimCLR). Use 'ImageNet' if ImageNet pretrained embedder is used.
-[--aggregator_weights]  # Path to the aggregator weights file.
-[--bag_path]            # Path to a folder containing folders of patches.
-[--patch_ext]            # File extensino of patches.
-[--map_path]            # Path of output attention maps.
+--slide_path            # Path to input WSI file (.svs format)
+--embedder_low          # Path to low magnification embedder weights
+--embedder_high         # Path to high magnification embedder weights
+--aggregator            # Path to aggregator model weights
+--output_dir            # Directory to save attention heatmap (optional)
+--tile_size             # Size of patches to extract (default: 224)
+--background_threshold  # Threshold for background filtering (default: 7)
+--base_mag              # Base magnification of WSI (default: 20)
+--magnifications        # Magnification levels to use (default: [0, 1])
+--device                # Device to use (cpu or cuda, default: auto-detect)
+--detection_threshold   # Threshold for positive detection (default: 0.5)
+--average               # Average bag and instance predictions (if used during training)
+--debug                 # Print debug information
+--debug_model           # Print detailed model debugging information
 ```
 
-- To obtain useful heatmap overlays, run the script WSI_heatmap.py after generating the heatmaps.  Make sure to edit the directories to reflect your folder structure. This code will loop over WSI images, generate high resolution images, and overlay the heatmaps generated previously on the images.
+The script will output:
 
-```bash
-python WSI_heatmap.py
-```
+- Binary prediction (Positive/Negative)
+- Prediction probability
+- Attention heatmap (if output_dir is specified)
+
+> The detection threshold for our aggregator is chosen during training with `train_tcga.py` and is saved with the model in a json file.
 
 ## Folder structure
 
