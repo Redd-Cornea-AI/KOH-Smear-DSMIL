@@ -373,9 +373,9 @@ def main():
     parser.add_argument('--dataset_test', default='KOH_Dataset_test_lambda', type=str, help='Dataset folder name')
     parser.add_argument('--split', default=0.2, type=float, help='Training/Validation split [0.2]')
     parser.add_argument('--model', default='dsmil', type=str, help='MIL model [dsmil]')
-    parser.add_argument('--dropout_patch', default=0.2, type=float, help='Patch dropout rate [0]')
-    parser.add_argument('--dropout_node', default=0.2, type=float, help='Bag classifier dropout rate [0]')
-    parser.add_argument('--non_linearity', default=1, type=float, help='Additional nonlinear operation [0]')
+    parser.add_argument('--dropout_patch', default=0.2, type=float, help='Patch dropout rate [0.2]')
+    parser.add_argument('--dropout_node', default=0.2, type=float, help='Bag classifier dropout rate [0.2]')
+    parser.add_argument('--non_linearity', default=1, type=float, help='Additional nonlinear operation [1]')
     parser.add_argument('--average', type=bool, default=False, help='Average the score of max-pooling and bag aggregating')
     parser.add_argument('--eval_scheme', default='5-fold-cv-standalone-test', type=str, help='Evaluation scheme [5-fold-cv | 5-fold-cv-standalone-test | 5-time-train+valid+test ]')
 
