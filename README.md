@@ -51,15 +51,12 @@ Our work has been published in **Ophthalmology Science**. Read the full paper [h
 
 ## KOH Smear Models
 
-Download the KOH smear fungal keratitis detection models [here](https://drive.google.com/open?id=1dxcuqHGNSOIvMs0dD2BsuuUhCZjx-sZA&usp=drive_fs). The link contains:
+Download the KOH smear fungal keratitis detection models [here](https://github.com/Redd-Cornea-AI/KOH-Smear-DSMIL/releases/tag/v1.0). This release contains:
 
 - Two embedders (for 10x and 20x magnifications).
-- One aggregator model.
+- An aggregator model.
 
 To test this model on your own whole slide images (WSIs), place the three `.pth` files in the `/models` directory and execute the `inference.py` script.  
-
-> For feature extraction using our embedders on your datasets, ensure that the two embedder model folders are located in the `simclr/runs` directory.
-> Make sure to follow the directory structure to avoid any issues during execution.
 
 ### Testing on your own KOH Smear WSIs (Inference)
 
@@ -105,7 +102,7 @@ The script will output:
 - Prediction probability
 - Attention heatmap (if output_dir is specified)
 
-> The detection threshold for our aggregator was chosen at `0.5710366368293762`. Our algorithm was trained with a base magnification of 20x, a tile size of 224px, with a minimum background entropy threshold (patch filtering) of 7. When using our models, use similar parameters for best results.
+> The detection threshold for our aggregator was chosen at `0.5710366368293762`. Our algorithm was trained with a base magnification of 20x with levels of 0 and 1, a tile size of 224px, with a minimum background entropy threshold (patch filtering) of 7. When using our models, use similar parameters for best results.
 
 ## Training on Your Dataset
 
@@ -173,6 +170,8 @@ python compute_feats.py --dataset=[DATASET_NAME]
 
 >Set flag `--magnification=tree` to compute the features for multiple magnifications.
 >This will use the last trained embedder to compute the features, if you want to use an embedder from a specific run, add the option `--weights=[RUN_NAME]`, where `[RUN_NAME]` is a folder name inside `simclr/runs/`. If you have an embedder you want to use, you can place the weight file as `simclr/runs/[RUN_NAME]/checkpoints/model.pth` and pass the `[RUN_NAME]` to this option. To use a specific embedder for each magnification, set option `--weights_low=[RUN_NAME]` (embedder for low magnification) and `--weights_high=[RUN_NAME]` (embedder for high magnification). The embedder architecture is ResNet18 with **instance normalization**.
+
+> For feature extraction using our embedders on your datasets, download the [embedder files](https://drive.google.com/open?id=1dxcuqHGNSOIvMs0dD2BsuuUhCZjx-sZA&usp=drive_fs) and place them in the `simclr/runs` directory.
 
 ```bash
 cd ..

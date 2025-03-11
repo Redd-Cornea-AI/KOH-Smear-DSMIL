@@ -40,3 +40,5 @@ README_old.md
 simclr1/*
 WSI
 inference_test/*
+models/high_mag_embedder.pth
+models/low_mag_embedder.pth
