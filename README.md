@@ -266,6 +266,7 @@ python inference.py \
 ```
 
 **Key Parameters:**
+
 ```text
 --slide_path            # Input WSI file path (.svs format)
 --embedder_low          # Low magnification embedder weights path
@@ -284,6 +285,7 @@ python inference.py \
 ```
 
 **Outputs:**
+
 - Binary prediction (Positive/Negative)
 - Prediction probability
 - Attention heatmap (if output_dir specified)
