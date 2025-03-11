@@ -185,13 +185,16 @@ python compute_feats.py --dataset=KOH_Dataset_train_lambda --num_classes 1 --mag
 python compute_feats.py --dataset=KOH_Dataset_test_lambda --num_classes 1 --magnification tree --weights_low=low_mag_embedder --weights_high=high_mag_embedder
 ```
 
+> For binary classifier, use `1` for positive bags and `0` for negative bags. Use `--num_classes=1` at training.  
+> For multi-class classifier (`N` positive classes and one optional negative class), use `0~(N-1)` for positive classes. If you have a negative class (not belonging to any one of the positive classes), use `N` for its label. Use `--num_classes=N` (`N` equals the number of **positive classes**) at training.
+
 5. Train the aggregator:
 
 ```bash
 python train_tcga.py --dataset=[DATASET_NAME]
 ```
 
->You will need to adjust `--num_classes` option if the dataset contains more than 2 positive classes or only 1 positive class and 1 negative class (binary classifier). See the next section for details.  
+>You will need to adjust `--num_classes` option if the dataset contains more than 2 positive classes or only 1 positive class and 1 negative class (binary classifier). See the previous section for details.  
 
 ### Useful arguments:
 
@@ -270,6 +273,9 @@ The script will output:
 
 ## Folder structure
 
+<details>
+<summary>Click to expand</summary>
+
 Data is organized in two folders, `WSI` and `datasets`. `WSI` folder contains the images and `datasets` contains the computed features.
 
 ```text
@@ -324,8 +330,12 @@ root
 |   |   |-- CLASS_2.csv
 |   |   |-- DATASET_NAME.csv
 ```
+</details>
   
 ## Feature vector csv files explanation
+
+<details>
+<summary>Click to expand</summary>
 
 1. For each bag, there is a .csv file where each row contains the feature of an instance. The .csv is named as "_bagID_.csv" and put into a folder named "_dataset-name_/_category_/".  
 
@@ -339,10 +349,7 @@ root
   <img src="thumbnails/bags.png" width="700px" />
 </div>  
 
-3. Labels.
-
-> For binary classifier, use `1` for positive bags and `0` for negative bags. Use `--num_classes=1` at training.  
-> For multi-class classifier (`N` positive classes and one optional negative class), use `0~(N-1)` for positive classes. If you have a negative class (not belonging to any one of the positive classes), use `N` for its label. Use `--num_classes=N` (`N` equals the number of **positive classes**) at training.
+</details>
 
 ## 📄 Paper Citation
 

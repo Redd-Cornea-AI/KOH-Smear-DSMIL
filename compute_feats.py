@@ -127,7 +127,7 @@ def compute_tree_feats(args, bags_list, embedder_low, embedder_high, save_path=N
 
 def main():
     parser = argparse.ArgumentParser(description='Compute TCGA features from SimCLR embedder')
-    parser.add_argument('--num_classes', default=2, type=int, help='Number of output classes [2]')
+    parser.add_argument('--num_classes', default=1, type=int, help='Number of output classes [1]')
     parser.add_argument('--batch_size', default=128, type=int, help='Batch size of dataloader [128]')
     parser.add_argument('--num_workers', default=4, type=int, help='Number of threads for datalodaer')
     parser.add_argument('--gpu_index', type=int, nargs='+', default=(0,), help='GPU ID(s) [0]')
