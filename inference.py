@@ -28,6 +28,8 @@ class WSIInference:
                  detection_threshold=0.5,
                  average=False,
                  debug_model=False,
+                 nonlinear=1,
+                 feature_size=1024,
                  device=None):
         """Initialize WSI inference pipeline.
         
@@ -42,6 +44,8 @@ class WSIInference:
             detection_threshold: Threshold for positive detection (default: 0.5)
             average: Whether to average bag and instance predictions (default: False)
             debug_model: Whether to print detailed model debugging info (default: False)
+            nonlinear: Additional nonlinear operation (default: 1)
+            feature_size: Size of feature vector (default: 1024)
             device: Device to run inference on ('cuda' or 'cpu', default: None - auto select)
         """
         self.tile_size = tile_size
@@ -51,6 +55,8 @@ class WSIInference:
         self.detection_threshold = detection_threshold
         self.average = average
         self.num_classes = 1  # Hard-coded to 1 for binary classification
+        self.nonlinear = nonlinear
+        self.feature_size = feature_size
         
         # Set device
         if device is None:
@@ -101,9 +107,8 @@ class WSIInference:
         
     def _load_aggregator(self, path, debug=False):
         """Load aggregator model."""
-        feature_size = 1024  # 512 (low mag) + 512 (high mag)
-        i_classifier = mil.FCLayer(in_size=feature_size, out_size=self.num_classes)
-        b_classifier = mil.BClassifier(input_size=feature_size, output_class=self.num_classes, nonlinear=True)
+        i_classifier = mil.FCLayer(in_size=self.feature_size, out_size=self.num_classes)
+        b_classifier = mil.BClassifier(input_size=self.feature_size, output_class=self.num_classes, nonlinear=self.nonlinear)
         milnet = mil.MILNet(i_classifier, b_classifier)
         
         # Load model weights
@@ -128,7 +133,7 @@ class WSIInference:
             print("\nTesting aggregator with random input:")
             try:
                 with torch.no_grad():
-                    random_input = torch.randn(10, feature_size).to(self.device)
+                    random_input = torch.randn(10, self.feature_size).to(self.device)
                     ins_pred, bag_pred, attn, _ = milnet(random_input)
                     print(f"  Instance prediction shape: {ins_pred.shape}")
                     print(f"  Bag prediction shape: {bag_pred.shape}")
@@ -779,6 +784,8 @@ def main():
     parser.add_argument('--debug_model', action='store_true', help='Print detailed model debugging information')
     # parser.add_argument('--normalize_scores', action='store_true', default=True, help='Normalize attention scores to [0,1] range')
     # parser.add_argument('--raw_scores', action='store_true', help='Use raw attention scores (overrides normalize_scores)')
+    parser.add_argument('--nonlinear', type=float, default=1, help='Additional nonlinear operation')
+    parser.add_argument('--feature_size', type=int, default=1024, help='Size of feature vector (512 per magnification)')
     args = parser.parse_args()
     
     # # If raw_scores is specified, override normalize_scores
@@ -804,6 +811,8 @@ def main():
         detection_threshold=args.detection_threshold,
         average=args.average,
         debug_model=args.debug_model,
+        nonlinear=args.nonlinear,
+        feature_size=args.feature_size,
         device=device
     )
     

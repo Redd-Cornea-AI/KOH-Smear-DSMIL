@@ -74,7 +74,12 @@ python inference.py \
     --base_mag 20 \
     --magnifications 0 1 \
     --device cpu \
-    --detection_threshold 0.4597581923007965
+    --detection_threshold 0.4597581923007965 \
+    --average \
+    --debug \
+    --debug_model \
+    --nonlinear 1 \
+    --feature_size 1024
 ```
 
 Useful arguments:
@@ -94,6 +99,8 @@ Useful arguments:
 --average               # Average bag and instance predictions (if used during training)
 --debug                 # Print debug information
 --debug_model           # Print detailed model debugging information
+--nonlinear             # Additional nonlinear operation (default: 1)
+--feature_size          # Size of feature vector, 512 per magnification (default: 1024)
 ```
 
 The script will output:
@@ -280,6 +287,8 @@ python inference.py \
 --device               # Computing device (cpu/cuda)
 --detection_threshold  # Positive detection threshold [0.5]
 --average              # Average bag and instance predictions
+--nonlinear            # Additional nonlinear operation (default: 1)
+--feature_size         # Size of feature vector, 512 per magnification (default: 1024)
 --debug                # Enable debug information
 --debug_model          # Enable detailed model debugging
 ```
