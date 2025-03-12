@@ -43,3 +43,4 @@ README OURS.md
 build
 dist
 *.spec
+openslide_bin
