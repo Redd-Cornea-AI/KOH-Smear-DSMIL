@@ -23,7 +23,6 @@ merged_patients_v3.csv
 merged_patients_v5_test.csv
 merged_patients_v5.csv
 datasets_dual_mag
-train.log
 train_tcga.py
 train_tcga2.py
 train_tcga3.py
@@ -31,10 +30,8 @@ train_tcga4.py
 train_tcga5_attention_map.py
 temp_test/
 temp_train
-simclr/nohup_highmag.out
-simclr/nohup_lowmag.out
-simclr/nohup.out
-simclr/train_simCLR.log
+*.out
+*.log
 simclr/all_patches_sorted.csv
 README_old.md
 simclr1/*
@@ -43,3 +40,6 @@ inference_test/*
 models/high_mag_embedder.pth
 models/low_mag_embedder.pth
 README OURS.md
+build
+dist
+*.spec
