@@ -74,7 +74,7 @@ python inference.py \
     --base_mag 20 \
     --magnifications 0 1 \
     --device cpu \
-    --detection_threshold 0.4597581923007965 \
+    --detection_threshold 0.4597581923007965
 ```
 
 Useful arguments:
