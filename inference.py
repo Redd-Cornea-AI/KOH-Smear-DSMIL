@@ -769,9 +769,9 @@ def main():
     """Main function."""
     parser = argparse.ArgumentParser(description='WSI Inference')
     parser.add_argument('--slide_path', type=str, required=True, help='Path to WSI file')
-    parser.add_argument('--embedder_low', type=str, required=True, help='Path to low magnification embedder model')
-    parser.add_argument('--embedder_high', type=str, required=True, help='Path to high magnification embedder model')
-    parser.add_argument('--aggregator', type=str, required=True, help='Path to aggregator model')
+    parser.add_argument('--embedder_low', type=str, default="models/embedder_low.pth", help='Path to low magnification embedder')
+    parser.add_argument('--embedder_high', type=str, default="models/embedder_high.pth", help='Path to high magnification embedder')
+    parser.add_argument('--aggregator', type=str, default="models/aggregator.pth", help='Path to aggregator')
     parser.add_argument('--output_dir', type=str, default=None, help='Directory to save attention heatmap')
     parser.add_argument('--tile_size', type=int, default=224, help='Tile size')
     parser.add_argument('--background_threshold', type=float, default=7, help='Background threshold')
